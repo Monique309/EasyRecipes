@@ -44,7 +44,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 @Composable
-fun RecipesListScreen() {
+fun RecipesListScreen(navController: NavHostController) {
 
     var randomRecipes by remember { mutableStateOf<List<RecipesDto>>(emptyList()) }
 
@@ -83,19 +83,18 @@ fun RecipesListScreen() {
         getRecipesList = randomRecipes
 
     )
-    {
+    {itemClicked ->
+        navController.navigate(route = "recipeDetail/${itemClicked.id}")
 
     }
 
 }
-
 
 @Composable
 fun RecipesListContent(
 
     getRecipesList: List<RecipesDto>,
     onClick: (RecipesDto) -> Unit,
-
 
     ) {
     Column(
@@ -114,7 +113,7 @@ fun RecipesListContent(
                 )
 
             RecipesSession(
-                label = "Recipes",
+                label = "Popular Recipes",
                 recipesList = getRecipesList,
                 onClick = onClick
 
@@ -199,7 +198,9 @@ fun RecipesListContent(
 
             )
             Text(
-                text = recipesDto.summary
+                text = recipesDto.summary,
+                maxLines = 4,
+                overflow = TextOverflow.Ellipsis
             )
         }
     }
@@ -208,7 +209,7 @@ fun RecipesListContent(
 @Composable
 private fun RecipeListScreenPreview() {
 
-    RecipesListScreen()
+
     
     
 }

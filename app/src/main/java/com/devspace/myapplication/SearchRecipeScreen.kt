@@ -21,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -41,7 +42,7 @@ import retrofit2.Response
 @Composable
 fun SearchRecipeScreen(query: String, navHostController: NavHostController) {
 
-    var searchRecipes by rememberSaveable { mutableStateOf<List<SearchRecipeDto>>(emptyList()) }
+    var searchRecipes by remember { mutableStateOf<List<SearchRecipeDto>>(emptyList()) }
 
     val apiService = RetrofitClient.retrofitInstance.create(ApiService::class.java)
     val callSearchRecipeList = apiService.searchRecipes(query)
@@ -146,7 +147,6 @@ fun SearchRecipeItem(searchRecipeDto: SearchRecipeDto, onClick: (SearchRecipeDto
 @Composable
 fun SearchRecipeScreen () {
 
-    SearchRecipeScreen()
     
 }
 
