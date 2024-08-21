@@ -1,6 +1,5 @@
-package com.devspace.myapplication
+package com.devspace.myapplication.common
 
-@kotlinx.serialization.Serializable
 
 data class RecipesDto(
     val id: Int,

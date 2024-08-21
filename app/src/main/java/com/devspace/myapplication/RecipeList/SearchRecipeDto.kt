@@ -1,4 +1,4 @@
-package com.devspace.myapplication
+package com.devspace.myapplication.RecipeList
 
 data class SearchRecipeDto (
 

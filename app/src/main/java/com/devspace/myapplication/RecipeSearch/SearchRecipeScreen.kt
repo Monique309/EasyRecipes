@@ -1,4 +1,4 @@
-package com.devspace.myapplication
+package com.devspace.myapplication.RecipeSearch
 
 import android.util.Log
 import androidx.compose.foundation.clickable
@@ -33,42 +33,40 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import androidx.room.util.query
 import coil.compose.AsyncImage
+import com.devspace.myapplication.RecipeList.SearchRecipeDto
+import com.devspace.myapplication.common.RecipeService
+import com.devspace.myapplication.common.RetrofitClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 @Composable
-fun SearchRecipeScreen(query: String, navHostController: NavHostController) {
+fun SearchRecipeScreen(query: String, navHostController: NavHostController,) {
+    val service = RetrofitClient.retrofitInstance.create(RecipeSearchService::class.java)
+    var searchRecipes by rememberSaveable { mutableStateOf<List<SearchRecipeDto>>(emptyList()) }
 
-    var searchRecipes by remember { mutableStateOf<List<SearchRecipeDto>>(emptyList()) }
-
-    val apiService = RetrofitClient.retrofitInstance.create(ApiService::class.java)
-    val callSearchRecipeList = apiService.searchRecipes(query)
-
-    callSearchRecipeList.enqueue(object : Callback<SearchRecipeResponse> {
-        override fun onResponse(
-            call: Call<SearchRecipeResponse>,
-            response: Response<SearchRecipeResponse>
-        ) {
-            if (response.isSuccessful) {
-                val searchRecipe = response.body()?.results
-                if (searchRecipe != null) {
-                    searchRecipes = searchRecipe
+    if(searchRecipes.isEmpty()){
+        service.searchRecipes(query).enqueue(object : Callback<SearchRecipeResponse> {
+            override fun onResponse(
+                call: Call<SearchRecipeResponse>,
+                response: Response<SearchRecipeResponse>
+            ) {
+                if (response.isSuccessful) {
+                    searchRecipes = response.body()?.results ?: emptyList()
+                } else {
+                    Log.d("MainActivity", "Request Error :: ${response.errorBody()}")
                 }
-            } else {
-                Log.d("MainActivity", "Request Error :: ${response.errorBody()}")
-
             }
-        }
 
-        override fun onFailure(call: Call<SearchRecipeResponse>, t: Throwable) {
-            Log.d("MainActivity", "Network Error :: ${t.message}")
-        }
+            override fun onFailure(call: Call<SearchRecipeResponse>, t: Throwable) {
+                Log.d("MainActivity", "Network Error :: ${t.message}")
+            }
+        })
+    }
 
 
-    })
+
 
     Column(modifier = Modifier.fillMaxSize()) {
 
@@ -91,7 +89,7 @@ fun SearchRecipeScreen(query: String, navHostController: NavHostController) {
             )
         }
 
-        SearchRecipeContent(recipes = searchRecipes, onClick = { itemClicked ->
+      SearchRecipeContent(recipes = searchRecipes, onClick = { itemClicked ->
             navHostController.navigate(route = "recipe_detail/${itemClicked.id}")
 
 
@@ -100,8 +98,9 @@ fun SearchRecipeScreen(query: String, navHostController: NavHostController) {
     }
 }
 
+
 @Composable
-fun SearchRecipeContent(recipes: List<SearchRecipeDto>,onClick: (SearchRecipeDto) -> Unit
+fun SearchRecipeContent(recipes: List<SearchRecipeDto>, onClick: (SearchRecipeDto) -> Unit
 ) {
     LazyColumn(
         modifier = Modifier.padding(6.dp)
