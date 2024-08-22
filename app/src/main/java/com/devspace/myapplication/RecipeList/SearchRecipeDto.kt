@@ -9,3 +9,7 @@ data class SearchRecipeDto (
 
 
 )
+
+data class SearchRecipeResponse(
+    val results: List<SearchRecipeDto>
+)

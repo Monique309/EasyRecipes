@@ -8,6 +8,7 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import com.devspace.myapplication.common.RecipesDto
 import com.devspace.myapplication.common.RetrofitClient
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -31,6 +32,12 @@ class RecipeDetailViewModel (
 
             }
 
+        }
+    }
+    fun cleanRecipeId(){
+        viewModelScope.launch{
+            delay(1000)
+            _uiGetRecipeInformation.value = null
         }
     }
         companion object {

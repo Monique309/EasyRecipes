@@ -25,14 +25,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
-import com.devspace.myapplication.RecipeDetail.RecipeDetailViewModel
 import com.devspace.myapplication.common.RecipesDto
+import com.devspace.myapplication.common.designsystem.ERHtlmText
 
 @Composable
 fun RecipesListScreen(
     navController: NavHostController,
-    viewModel: RecipeListViewModel,
-    recipeDetailViewModel: RecipeDetailViewModel
+    viewModel: RecipeListViewModel
 ) {
 
     val randomRecipes by viewModel.randomRecipes.collectAsState()
@@ -95,20 +94,25 @@ fun RecipesListContent(
     ){
 
 
-        Text(
-            modifier = Modifier.padding(8.dp),
-            fontSize = 24.sp,
-            text = label,
-            fontWeight = FontWeight.SemiBold
-        )
-        RecipesList(
-            recipesList = recipesList, onClick
-        )
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+        ) {
+            Text(
+
+                fontSize = 24.sp,
+                text = label,
+                fontWeight = FontWeight.SemiBold
+            )
+            Spacer(modifier = Modifier.size(8.dp))
+            RecipesList(recipesList, onClick)
+        }
 
     }
 
     @Composable
-    fun RecipesList(
+    private fun RecipesList(
         recipesList: List<RecipesDto>,
         onClick: (RecipesDto) -> Unit
 
@@ -139,30 +143,30 @@ fun RecipesListContent(
                 }
         ) {
             AsyncImage(
-                contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .clip(RoundedCornerShape(topEnd = 8.dp, topStart = 8.dp))
-                    .fillMaxWidth()
+                    .fillMaxSize()
                     .height(200.dp),
-
+                contentScale = ContentScale.Crop,
                 model = recipesDto.image,
                 contentDescription = "${recipesDto.title} Poster image"
             )
             Spacer(modifier = Modifier.size(8.dp))
+
             Text(
                 modifier = Modifier.padding(8.dp),
                 fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold,
-                text = recipesDto.title
+                text = recipesDto.title)
 
-            )
-            Text(
-                text = recipesDto.summary,
-                maxLines = 4,
-                overflow = TextOverflow.Ellipsis
-            )
+
+            ERHtlmText(
+                text = recipesDto.summary, maxLine = 3,
+
+                )
         }
     }
+
 
 @Preview(showBackground = true)
 @Composable

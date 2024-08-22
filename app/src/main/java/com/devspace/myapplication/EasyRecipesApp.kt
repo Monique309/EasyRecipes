@@ -22,7 +22,7 @@ fun EasyRecipesApp(
 
         composable(route = "recipeList") {
 
-            RecipesListScreen(navController,recipeListViewModel, recipeDetailViewModel)
+            RecipesListScreen(navController,recipeListViewModel)
         }
         composable(
             route = "recipeDetail" + "/{itemId}",
